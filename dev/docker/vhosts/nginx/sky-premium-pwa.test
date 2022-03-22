@@ -1,0 +1,37 @@
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name backend.sky-premium-pwa.test;
+
+    ssl_certificate /usr/local/share/ssl/backend.sky-premium-pwa.test.pem;
+    ssl_certificate_key /usr/local/share/ssl/backend.sky-premium-pwa.test-key.pem;
+
+    location / {
+        proxy_pass http://0.0.0.0:8011/;
+        include /etc/nginx/proxy_params;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name sky-premium-pwa.test;
+
+    ssl_certificate /usr/local/share/ssl/sky-premium-pwa.test.pem;
+    ssl_certificate_key /usr/local/share/ssl/sky-premium-pwa.test-key.pem;
+
+    location /sockjs-node/ {
+        proxy_pass http://0.0.0.0:3033/sockjs-node/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        include /etc/nginx/proxy_params;
+    }
+
+    location / {
+        proxy_pass http://0.0.0.0:3033/;
+        include /etc/nginx/proxy_params;
+    }
+}
