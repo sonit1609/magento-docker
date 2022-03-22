@@ -10,6 +10,9 @@ services:
         - ./dev/docker/images/php/php-custom.ini:/usr/local/etc/php/conf.d/php-custom.ini
     depends_on:
         - mysql
+        - redis
+        - rabbitmq
+        - elasticsearch
     expose:
         - "9000"
     environment:
