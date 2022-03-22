@@ -34,39 +34,25 @@ services:
     networks:
       - magento
 
-  mysql:
-    image: mysql:8.0.27
-    container_name: mysql
-    volumes:
-      - ./dev/docker/images/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
-    environment:
-      MYSQL_DATABASE: 'magento_db'
-      MYSQL_ROOT_PASSWORD: '123'
-      MYSQL_USER: 'son'
-      MYSQL_PASSWORD: '123'
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'false'
-    ports:
-      - "3308:3306"
-    networks:
-      - magento
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
-    environment:
-      - PMA_ARBITRARY=1
+  mysql-server:
+    image: mysql:8.0.19
     restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+   
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.0.1
+    restart: always
+    environment:
+      PMA_HOST: mysql-server
+      PMA_USER: root
+      PMA_PASSWORD: secret
     ports:
       - "8080:80"
-    volumes:
-      - /sessions
-    external_links:
-      - mysql
-    depends_on:
-      - mysql
-      - redis
-    networks:
-      - magento
 
   mailhog:
     image: mailhog/mailhog
@@ -104,4 +90,6 @@ services:
 networks:
   magento:
     driver: bridge
+volumes:
+  mysql-data:
 
