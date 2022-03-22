@@ -38,7 +38,7 @@ services:
     image: mysql:8.0.27
     container_name: mysql
     volumes:
-      - ./dev/docker/data/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - ./dev/docker/images/mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
     environment:
       MYSQL_DATABASE: 'magento_db'
       MYSQL_ROOT_PASSWORD: '123'
@@ -104,3 +104,4 @@ services:
 networks:
   magento:
     driver: bridge
+
